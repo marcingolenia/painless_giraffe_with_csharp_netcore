@@ -8,31 +8,28 @@ using static Giraffe.Middleware.ServiceCollectionExtensions;
 
 namespace WebApplication
 {
-    public interface IHelloWorldGenerator { string Say(); }
-    
-    public class SadHelloWorldGenerator: IHelloWorldGenerator
-    {
-        public string Say() => "Hello World! Test from C# :(";
-    }
-    
-    public class Startup
-    {
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddGiraffe();
-            services.AddControllers();
-            services.AddTransient<IHelloWorldGenerator, SadHelloWorldGenerator>();
-        }
+  public interface IHelloWorldGenerator { string Say(); }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
-            app.UseRouting();
-            app.UseGiraffe(HttpHandler.webApp(Composition.build("Test")));
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-        }
+  public class SadHelloWorldGenerator : IHelloWorldGenerator
+  {
+    public string Say() => "Hello World! Test from C# :(";
+  }
+
+  public class Startup
+  {
+    public void ConfigureServices(IServiceCollection services)
+    {
+      services.AddGiraffe();
+      services.AddControllers();
+      services.AddTransient<IHelloWorldGenerator, SadHelloWorldGenerator>();
     }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+      if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+      app.UseRouting();
+      app.UseGiraffe(HttpHandler.webApp(Composition.build("Test")));
+      app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+    }
+  }
 }
